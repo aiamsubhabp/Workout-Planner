@@ -10,6 +10,8 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String, unique = True, nullable = False)
     _password_hash = db.Column(db.String)
 
+    user_exercises = db.relationship('UserExercises', back_populates = 'users')
+
     def __repr__(self):
         return f'<User {self.id}, {self.username}>'
 
@@ -19,6 +21,8 @@ class Exercise(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String)
     muscle_group = db.Column(db.String)
+
+    user_exercises = db.relationship('UserExercises', back_populates = 'exercises')
 
     def __repr__(self):
         return f'<User {self.id}, {self.name}, {self.muscle_group}>'
@@ -33,5 +37,8 @@ class UserExercises(db.Model, SerializerMixin):
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'))
+
+    user = db.relationship('User', back_populates = 'user_exercises')
+    exercise = db.relationship('User', back_populates = 'user_exercises')
 
     
