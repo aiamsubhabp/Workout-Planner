@@ -52,13 +52,5 @@ if __name__ == "__main__":
     db.session.add_all([u3_e8, u3_e2, u3_e3, u3_e9])
     db.session.commit()
     
-
-
-
-
-
-
-
-
     print('Seeding complete')
 

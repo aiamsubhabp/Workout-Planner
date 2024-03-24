@@ -12,11 +12,16 @@ class User(db.Model, SerializerMixin):
 
     user_exercises = db.relationship('UserExercise', back_populates = 'user')
 
+    serialize_rules = ('-user_exercises.user',)
+
     def __repr__(self):
         return f'<User {self.id}, {self.username}>'
 
 class Exercise(db.Model, SerializerMixin):
     __tablename__ = 'exercises'
+
+    # serialize_rules = ('-user_exercises.exercise', '-user_exercises.user')
+    serialize_rules = ('-user_exercises',)
 
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String)
@@ -24,11 +29,16 @@ class Exercise(db.Model, SerializerMixin):
 
     user_exercises = db.relationship('UserExercise', back_populates = 'exercise')
 
+    
+    
+
     def __repr__(self):
         return f'<Exercise {self.id}, {self.name}, {self.muscle_group}>'
 
 class UserExercise(db.Model, SerializerMixin):
     __tablename__ = 'user_exercises'
+
+    serialize_rules = ('-user.user_exercises', '-exercise.use_exercises')
 
     id = db.Column(db.Integer, primary_key = True)
     sets = db.Column(db.Integer)
@@ -40,6 +50,8 @@ class UserExercise(db.Model, SerializerMixin):
 
     user = db.relationship('User', back_populates = 'user_exercises')
     exercise = db.relationship('Exercise', back_populates = 'user_exercises')
+
+     
 
     def __repr__(self):
         return f'<UserExercise {self.id}, {self.sets}, {self.reps}, {self.user.username}, {self.exercise.name}>'
