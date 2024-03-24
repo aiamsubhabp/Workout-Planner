@@ -1,5 +1,5 @@
 from config import app, db, api
-from flask import Flask, make_response, session, request
+from flask import Flask, make_response, session, request, jsonify
 from flask_migrate import Migrate
 from flask_restful import Resource
 
@@ -7,7 +7,7 @@ from models import User, UserExercise, Exercise
 
 migrate = Migrate(app, db)
 
-class ExerciseList(Resource):
+class Exercises(Resource):
   def get(self):
     exercises = Exercise.query.all()
     exercises_dict = [exercise.to_dict() for exercise in exercises]
@@ -30,7 +30,46 @@ class ExerciseList(Resource):
       return make_response('Failed to create new exercise', 400)
 
   
-api.add_resource(ExerciseList, '/api/exercises')
+api.add_resource(Exercises, '/api/exercises')
+
+class ExerciseById(Resource):
+  def get(self, id):
+    exercise = Exercise.query.filter(Exercise.id == id).first()
+    if not exercise:
+      return make_response('Exercise not found', 404)
+    
+    exercise_dict = exercise.to_dict()
+
+    return make_response(jsonify(exercise_dict), 200)
+  
+  def patch(self, id):
+    exercise = Exercise.query.filter(Exercise.id == id).first()
+    if not exercise:
+      return make_response('Exercise not found', 404)
+    
+    try:
+      data = request.get_json()
+      for attr in data:
+        setattr(exercise, attr, data[attr])
+      db.session.add(exercise)
+      db.session.commit()
+      return make_response(exercise.to_dict(), 202)
+    except:
+      return make_response('Failed to update exercise', 400)
+    
+  def delete(self, id):
+    exercise = Exercise.query.filter(Exercise.id == id).first()
+    if not exercise:
+      return make_response('Exercise not found', 404)      
+    
+    db.session.delete(exercise)
+    db.session.commit()
+
+    return make_response("Exercise sucessfully deleted", 204)
+
+  
+api.add_resource(ExerciseById, '/api/exercises/<int:id>')
+
 
 
 if __name__ == "__main__":
