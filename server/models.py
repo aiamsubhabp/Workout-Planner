@@ -10,7 +10,7 @@ class User(db.Model, SerializerMixin):
     username = db.Column(db.String, unique = True, nullable = False)
     _password_hash = db.Column(db.String)
 
-    user_exercises = db.relationship('UserExercises', back_populates = 'users')
+    user_exercises = db.relationship('UserExercise', back_populates = 'user')
 
     def __repr__(self):
         return f'<User {self.id}, {self.username}>'
@@ -22,12 +22,12 @@ class Exercise(db.Model, SerializerMixin):
     name = db.Column(db.String)
     muscle_group = db.Column(db.String)
 
-    user_exercises = db.relationship('UserExercises', back_populates = 'exercises')
+    user_exercises = db.relationship('UserExercise', back_populates = 'exercise')
 
     def __repr__(self):
-        return f'<User {self.id}, {self.name}, {self.muscle_group}>'
+        return f'<Exercise {self.id}, {self.name}, {self.muscle_group}>'
 
-class UserExercises(db.Model, SerializerMixin):
+class UserExercise(db.Model, SerializerMixin):
     __tablename__ = 'user_exercises'
 
     id = db.Column(db.Integer, primary_key = True)
@@ -39,6 +39,9 @@ class UserExercises(db.Model, SerializerMixin):
     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'))
 
     user = db.relationship('User', back_populates = 'user_exercises')
-    exercise = db.relationship('User', back_populates = 'user_exercises')
+    exercise = db.relationship('Exercise', back_populates = 'user_exercises')
+
+    def __repr__(self):
+        return f'<UserExercise {self.id}, {self.sets}, {self.reps}, {self.user.username}, {self.exercise.name}>'
 
     
