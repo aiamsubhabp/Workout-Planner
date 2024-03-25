@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
 import ExercisePage from './components/ExercisePage'
-import './App.css'
+import NavBar from './components/NavBar'
+import Header from './components/Header'
+// import './App.css'
 
 function App() {
   const [exercises, setExercises] = useState([])
@@ -13,6 +15,8 @@ function App() {
 
   return (
     <div className='app'>
+      <Header />
+      <NavBar />
       <ExercisePage exercises = {exercises}/>
 
     </div>
