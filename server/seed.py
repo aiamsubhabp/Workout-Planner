@@ -18,9 +18,9 @@ if __name__ == "__main__":
     db.session.add_all([u1, u2, u3])
     db.session.commit()
 
-    e1 = Exercise(name = 'push-ups', muscle_group = 'triceps, chest')
-    e2 = Exercise(name = 'pull-ups', muscle_group = 'back')
-    e3 = Exercise(name = 'overhead press', muscle_group = 'shoulders')
+    e1 = Exercise(name = 'push-ups', muscle_group = 'triceps, chest', image = 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Man_Doing_Push_Ups_Cartoon.svg/1024px-Man_Doing_Push_Ups_Cartoon.svg.png')
+    e2 = Exercise(name = 'pull-ups', muscle_group = 'back', image = 'https://banner2.cleanpng.com/20180528/qaq/kisspng-chin-up-pull-up-exercise-biceps-weight-training-pull-up-5b0c9456854b48.727682571527551062546.jpg')
+    e3 = Exercise(name = 'overhead press', muscle_group = 'shoulders', image = 'https://us.123rf.com/450wm/lawangdesign/lawangdesign2111/lawangdesign211100036/177688817-athletic-boy-lifting-weights-on-white-background.jpg?ver=6')
     e4 = Exercise(name = 'squats', muscle_group = 'legs')
     e5 = Exercise(name = 'bench press', muscle_group = 'chest')
     e6 = Exercise(name = 'deadlift', muscle_group = 'legs, lower back')

@@ -9,12 +9,13 @@ function ExercisePage({exercises}){
             key={exercise.id}
             name={exercise.name}
             muscle_group={exercise.muscle_group} 
+            image = {exercise.image}
         />
     ))
     return (
-        <div>
+        <ul className='cards'>
             {exerciseList}
-        </div>
+        </ul>
     )
 }
 

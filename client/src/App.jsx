@@ -12,7 +12,7 @@ function App() {
   }, [])
 
   return (
-    <div>
+    <div className='app'>
       <ExercisePage exercises = {exercises}/>
 
     </div>
