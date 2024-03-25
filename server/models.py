@@ -26,6 +26,7 @@ class Exercise(db.Model, SerializerMixin):
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String)
     muscle_group = db.Column(db.String)
+    image = db.Column(db.String, default = 'https://banner2.cleanpng.com/20180605/fia/kisspng-barbell-dumbbell-weight-training-physical-fitness-dumbbell-5b16616f58d006.4342646415281933913638.jpg')
 
     user_exercises = db.relationship('UserExercise', back_populates = 'exercise')
 
