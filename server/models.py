@@ -29,9 +29,6 @@ class Exercise(db.Model, SerializerMixin):
 
     user_exercises = db.relationship('UserExercise', back_populates = 'exercise')
 
-    
-    
-
     def __repr__(self):
         return f'<Exercise {self.id}, {self.name}, {self.muscle_group}>'
 
@@ -44,6 +41,7 @@ class UserExercise(db.Model, SerializerMixin):
     sets = db.Column(db.Integer)
     reps = db.Column(db.Integer)
     notes = db.Column(db.String, nullable = True)
+    date = db.Column(db.DateTime)
 
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     exercise_id = db.Column(db.Integer, db.ForeignKey('exercises.id'))

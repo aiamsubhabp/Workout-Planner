@@ -7,6 +7,23 @@ from models import User, UserExercise, Exercise
 
 migrate = Migrate(app, db)
 
+@app.route('/')
+def index():
+  return '<h1>Workout Tracker Api</h1>'
+
+class Users(Resource):
+  def get(self):
+    users = Users.query.all()
+    users_dict = [user.to_dict() for user in users]
+
+    return make_response(users_dict, 200)
+  
+  def post(self):
+    data = request.get_json()
+    
+
+api.add_resource(Users, '/api/users')
+
 class Exercises(Resource):
   def get(self):
     exercises = Exercise.query.all()
@@ -29,7 +46,6 @@ class Exercises(Resource):
     except:
       return make_response('Failed to create new exercise', 400)
 
-  
 api.add_resource(Exercises, '/api/exercises')
 
 class ExerciseById(Resource):
@@ -66,11 +82,8 @@ class ExerciseById(Resource):
     db.session.commit()
 
     return make_response("Exercise sucessfully deleted", 204)
-
   
 api.add_resource(ExerciseById, '/api/exercises/<int:id>')
-
-
 
 if __name__ == "__main__":
   app.run(port=5555, debug=True)
