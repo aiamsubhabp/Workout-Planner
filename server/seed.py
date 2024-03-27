@@ -11,9 +11,14 @@ if __name__ == "__main__":
 
     print('Seeding data in process...')
     
-    u1 = User(username = 'mike_tyson', _password_hash = 'password1')
-    u2 = User(username = 'brad_pitt', _password_hash = 'password2')
-    u3 = User(username = 'KingKong', _password_hash = 'password3')
+    u1 = User(username = 'mike_tyson')
+    u1.password_hash = 'password1'
+
+    u2 = User(username = 'brad_pitt')
+    u2.password_hash = 'password2'
+    
+    u3 = User(username = 'KingKong')
+    u3.password_hash = 'password3'
 
     db.session.add_all([u1, u2, u3])
     db.session.commit()

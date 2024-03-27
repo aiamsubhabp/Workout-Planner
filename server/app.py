@@ -2,6 +2,7 @@ from config import app, db, api
 from flask import Flask, make_response, session, request, jsonify
 from flask_migrate import Migrate
 from flask_restful import Resource
+from sqlalchemy.exc import IntegrityError
 
 from models import User, UserExercise, Exercise
 
@@ -10,6 +11,73 @@ migrate = Migrate(app, db)
 @app.route('/')
 def index():
   return '<h1>Workout Tracker Api</h1>'
+
+@app.before_request
+def check_if_logged_in():
+  open_access_list = [
+    'signup',
+    'login',
+    'check_session'
+  ]
+  if (request.endpoint) not in open_access_list and (not session.get('user_id')):
+    return {'error': '401 Unauthorized'}, 401
+  
+class Signup(Resource):
+  def post(self):
+    request_json = request.get_json()
+
+    username = request_json.get('username')
+    password = request_json.get('password')
+
+    user = User(
+      username = username
+    )
+
+    user.password_hash = password
+
+    try:
+      db.session.add(user)
+      db.session.commit()
+
+      session['user_id'] = user.id
+      
+      return user.to_dict(), 201
+    
+    except IntegrityError:
+      return {'error': '422 Unprocessable Entity'}, 422
+    
+class CheckSession(Resource):
+  def get(self):
+    if session.get('user_id'):
+      user = User.query.filter(User.id == session['user_id']).first()
+
+      return user.to_dict(), 200
+    
+    return {'error': '401 Unauthorized'}, 401
+  
+class Login(Resource):
+  def post(self):
+    request_json = request.get_json()
+
+    username = request_json.get('username')
+    password = request_json.get('password')
+
+    user = User.query.filter(User.username == username).first()
+    if user:
+      if user.authenticate(password):
+        session['user_id'] = user.id
+        return user.to_dict(), 200
+    return {'error': '401 Unauthorized'}, 401
+    
+class Logout(Resource):
+  def delete(self):
+    session['user_id'] = None
+    return {}, 204
+
+api.add_resource(Signup, '/api/signup', endpoint = 'signup')
+api.add_resource(CheckSession, '/api/check_session', endpoint = 'check_session')
+api.add_resource(Login, '/api/login', endpoint='login')
+api.add_resource(Logout, '/api/logout', endpoint='logout')
 
 class Users(Resource):
   def get(self):
