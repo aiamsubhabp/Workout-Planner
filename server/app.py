@@ -13,14 +13,26 @@ def index():
 
 class Users(Resource):
   def get(self):
-    users = Users.query.all()
+    users = User.query.all()
     users_dict = [user.to_dict() for user in users]
 
-    return make_response(users_dict, 200)
+    return users_dict, 200
   
   def post(self):
     data = request.get_json()
-    
+
+    new_user = User(
+      username = data['username'],
+      _password_hash = data['_password_hash']
+    )
+
+    try:
+      db.session.add(new_user)
+      db.session.commit()
+      return new_user.to_dict(), 201
+    except:
+      response = 'Failed to create new user', 400
+      return response
 
 api.add_resource(Users, '/api/users')
 
